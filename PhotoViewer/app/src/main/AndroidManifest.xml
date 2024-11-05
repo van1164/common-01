@@ -27,6 +27,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".upload.UploadActivity" />
+        <activity android:name=".detail.DetailActivity" />
     </application>
 
 </manifest>

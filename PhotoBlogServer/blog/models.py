@@ -10,9 +10,11 @@ class Post(models.Model):
     published_date = models.DateTimeField(
     blank=True, null=True)
     image = models.ImageField(upload_to='blog_image/%Y/%m/%d/', default='blog_image/default_error.png')
+    likes = models.PositiveIntegerField(default=0)  # Add likes field
 
     def publish(self):
         self.published_date = timezone.now()
         self.save()
     def __str__(self):
         return self.title
+    

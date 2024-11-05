@@ -6,10 +6,39 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets
 from .models import Post
 from .serializers import PostSerializer
+import logging
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework import status
+logger = logging.getLogger('myapp')
+
 
 class BlogImages(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    def create(self, request, *args, **kwargs):
+        print(request)
+        data = {
+            "author": request.user.id,
+            "title": request.data.get('title'),
+            "text": request.data.get('text'),
+            "image": request.FILES.get('image'),
+            "created_date": timezone.now(),
+            "published_date": timezone.now()
+        }
+        serializer = PostSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk=None):
+        post = self.get_object()
+        post.likes += 1  # Increment likes by 1
+        post.save()
+        return Response({'likes': post.likes}, status=status.HTTP_200_OK)
 
 
 def post_list(request):
@@ -20,6 +49,7 @@ def post_detail(request, pk):
     return render(request, 'blog/post_detail.html', {'post': post})
 
 def post_new(request):
+    print(request)
     if request.method == "POST":
         form = PostForm(request.POST)
         if form.is_valid():

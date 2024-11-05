@@ -29,6 +29,12 @@
             android:text="새로운 이미지 게시" />
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
